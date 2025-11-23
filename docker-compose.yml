@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  weather-api:
+    image: weather-api:latest
+    ports:
+      - "8000:8000"
+    networks:
+      - weather-network
+
+  weather-frontend:
+    image: weather-frontend:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - WEATHER_API_URL=http://weather-api:8000
+    depends_on:
+      - weather-api
+    networks:
+      - weather-network
+
+networks:
+  weather-network:
+    driver: bridge

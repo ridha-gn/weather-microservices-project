@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weather-frontend
+  labels:
+    app: weather-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: weather-frontend
+  template:
+    metadata:
+      labels:
+        app: weather-frontend
+    spec:
+      containers:
+      - name: weather-frontend
+        image: ridhagn/weather-frontend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: WEATHER_API_URL
+          value: "http://weather-api"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weather-frontend
+spec:
+  selector:
+    app: weather-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000

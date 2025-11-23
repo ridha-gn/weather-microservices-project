@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .weather-card { 
+            border: 1px solid #ddd; 
+            padding: 20px; 
+            margin: 10px; 
+            border-radius: 8px; 
+            display: inline-block;
+            width: 200px;
+        }
+        .sunny { background-color: #fff9c4; }
+        .cloudy { background-color: #f5f5f5; }
+        .rainy { background-color: #e3f2fd; }
+        .error { color: red; padding: 20px; background: #ffebee; }
+    </style>
+</head>
+<body>
+    <h1>🌤️ Weather Dashboard</h1>
+    
+    {% if error %}
+        <div class="error">
+            <h3>Error: {{ error }}</h3>
+        </div>
+    {% elif weather_data %}
+        {% for city, data in weather_data.items() %}
+            <div class="weather-card {{ data.condition.lower() }}">
+                <h3>{{ data.city }}</h3>
+                <p><strong>Temperature:</strong> {{ data.temperature }}°C</p>
+                <p><strong>Condition:</strong> {{ data.condition }}</p>
+                <p><strong>Humidity:</strong> {{ data.humidity }}%</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No weather data available</p>
+    {% endif %}
+</body>
+</html>
